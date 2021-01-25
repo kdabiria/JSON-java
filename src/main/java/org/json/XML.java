@@ -274,7 +274,7 @@ public class XML {
         // <<
 
         token = x.nextToken();
-
+        System.out.println("real: " + token);
         // <!
 
         if (token == BANG) {
@@ -311,15 +311,14 @@ public class XML {
             } while (i > 0);
             return false;
         } else if (token == QUEST) {
-
             // <?
             x.skipPast("?>");
             return false;
         } else if (token == SLASH) {
 
             // Close tag </
-
             token = x.nextToken();
+
             if (name == null) {
                 throw x.syntaxError("Mismatched close tag " + token);
             }
@@ -337,6 +336,7 @@ public class XML {
             // Open tag <
 
         } else {
+
             tagName = (String) token;
             token = null;
             jsonObject = new JSONObject();
@@ -370,7 +370,8 @@ public class XML {
                                             : stringToValue((String) token));
                         }
                         token = null;
-                    } else {
+                    }
+                    else {
                         jsonObject.accumulate(string, "");
                     }
 
@@ -577,6 +578,8 @@ public class XML {
     public static JSONObject toJSONObject(String string) throws JSONException {
         return toJSONObject(string, XMLParserConfiguration.ORIGINAL);
     }
+
+
 
     /**
      * Convert a well-formed (but not necessarily valid) XML into a
@@ -857,4 +860,207 @@ public class XML {
                         + ">" + string + "</" + tagName + ">";
 
     }
+
+    private static boolean Myparse(XMLTokener x, JSONObject context, String name, XMLParserConfiguration config, String[] keys)
+            throws JSONException {
+        char c;
+        int i;
+        JSONObject jsonObject = null;
+        String string;
+        String tagName;
+        Object token;
+        XMLXsiTypeConverter<?> xmlXsiTypeConverter;
+        int index = 1;
+
+        // Test for and skip past these forms:
+        // <!-- ... -->
+        // <! ... >
+        // <![ ... ]]>
+        // <? ... ?>
+        // Report errors for these forms:
+        // <>
+        // <=
+        // <<
+
+        token = x.nextToken();
+
+        // <!
+
+        if (token == BANG) {
+            c = x.next();
+            if (c == '-') {
+                if (x.next() == '-') {
+                    x.skipPast("-->");
+                    return false;
+                }
+                x.back();
+            } else if (c == '[') {
+                token = x.nextToken();
+                if ("CDATA".equals(token)) {
+                    if (x.next() == '[') {
+                        string = x.nextCDATA();
+                        if (string.length() > 0) {
+                            context.accumulate(config.getcDataTagName(), string);
+                        }
+                        return false;
+                    }
+                }
+                throw x.syntaxError("Expected 'CDATA['");
+            }
+            i = 1;
+            do {
+                token = x.nextMeta();
+                if (token == null) {
+                    throw x.syntaxError("Missing '>' after '<!'.");
+                } else if (token == LT) {
+                    i += 1;
+                } else if (token == GT) {
+                    i -= 1;
+                }
+            } while (i > 0);
+            return false;
+        } else if (token == QUEST) {
+
+            // <?
+            x.skipPast("?>");
+            return false;
+        } else if (token == SLASH) {
+
+            // Close tag </
+            token = x.nextToken();
+
+            if (name == null) {
+                throw x.syntaxError("Mismatched close tag " + token);
+            }
+            if (!token.equals(name)) {
+                throw x.syntaxError("Mismatched " + name + " and " + token);
+            }
+            if (x.nextToken() != GT) {
+                throw x.syntaxError("Misshaped close tag");
+            }
+            return true;
+
+        } else if (token instanceof Character) {
+            throw x.syntaxError("Misshaped tag");
+
+            // Open tag <
+
+        } else {
+
+            tagName = (String) token;
+            System.out.println("Kamyar: " + tagName);
+
+            XMLTokener prev = null;
+//            token = null;
+            jsonObject = new JSONObject();
+            boolean nilAttributeFound = false;
+            xmlXsiTypeConverter = null;
+            int counter = 0;
+
+            for (;;) {
+                System.out.println("lalalalalal: "+ token);
+                if(index <= keys.length - 1  && tagName.equals(keys[index])){
+                    if( index == keys.length - 1){
+                        System.out.println("ee: " );
+                        x.skipPast("<");
+                        parse(x, context, null, config);
+//                        System.out.println("DONEEEEE");
+                        return true;
+
+                    }
+                    else {
+                        System.out.println("here!!!!!");
+                        x.skipPast("<");
+                        token = x.nextToken();
+                        tagName = (String) token;
+                        System.out.println(token);
+                        index++;
+                    }
+
+//                    tagName = (String) token;
+
+                }
+                else if(token instanceof String) {
+//                    if (token instanceof String)
+//                        tagName = (String) token;
+                    char temp = x.next();
+                    x.back();
+                    if(temp == '<')
+                        token = x.nextContent();
+                    else
+                        token = x.nextToken();
+
+                    System.out.println("mewo " + tagName);
+                }
+                else if (token == GT){
+                    token = x.nextContent();
+//                    tagName = (String) token;
+                    System.out.println("GT");
+//                    return false;
+                }
+                else if (token == LT) {
+                    char temp = x.next();
+                    x.back();
+                    if(temp != SLASH && temp != QUEST){
+                        prev = x;
+                        token = x.nextToken();
+                        tagName = (String) token;
+                    }
+                    else
+                        token = x.nextToken();
+//                    tagName = (String) token;
+
+                    System.out.println("LT");
+                }
+                else if (token == SLASH) {
+                    token = x.nextToken();
+//                    tagName = (String) token;
+
+                    System.out.println("SLASH");
+                }
+                else if (token == EQ){
+                    token = x.nextToken();
+                    System.out.println("EQ");
+                }
+//                else if (index >= keys.length ){
+//                    return false;
+//                }
+//                System.out.println("haha:" + token.getClass());
+
+
+            }
+        }
+    }
+
+    /*
+    * adding overloaded static method here
+    * */
+
+    public static JSONObject toJSONObject(Reader reader, JSONPointer path) {
+        JSONObject jo = new JSONObject();
+
+        XMLTokener x = new XMLTokener(reader);
+        // path: /cataloge/book/0
+        String[] keys = path.toString().split("/");
+        // ["", cataogle, book, 0]
+        for(int i =0; i < keys.length;i++)
+            System.out.println(keys[i]);
+        System.out.println("END!!!!");
+//        System.out.println(p);
+        boolean flag = false;
+        while (x.more() && !flag) {
+
+            x.skipPast("<");
+//            System.out.println(x.nextToken());
+//            x.skipPast("<");
+//            System.out.println(x.nextToken());
+            if(x.more()) {
+                flag = Myparse(x, jo, null , XMLParserConfiguration.KEEP_STRINGS, keys);
+//                flag = parse(x, jo, null , XMLParserConfiguration.KEEP_STRINGS);
+                System.out.println(flag);
+            }
+        }
+        return jo;
+    }
+
 }
