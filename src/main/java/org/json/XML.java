@@ -274,7 +274,7 @@ public class XML {
         // <<
 
         token = x.nextToken();
-        System.out.println("real: " + token);
+
         // <!
 
         if (token == BANG) {
@@ -1022,6 +1022,9 @@ public class XML {
                     token = x.nextToken();
                     System.out.println("EQ");
                 }
+                else if(token == null){
+                    return false;
+                }
 //                else if (index >= keys.length ){
 //                    return false;
 //                }
@@ -1045,20 +1048,54 @@ public class XML {
         // ["", cataogle, book, 0]
         for(int i =0; i < keys.length;i++)
             System.out.println(keys[i]);
-        System.out.println("END!!!!");
+        System.out.println("END!!");
 //        System.out.println(p);
         boolean flag = false;
-        while (x.more() && !flag) {
+        while (x.more()) {
 
             x.skipPast("<");
-//            System.out.println(x.nextToken());
-//            x.skipPast("<");
-//            System.out.println(x.nextToken());
             if(x.more()) {
-                flag = Myparse(x, jo, null , XMLParserConfiguration.KEEP_STRINGS, keys);
-//                flag = parse(x, jo, null , XMLParserConfiguration.KEEP_STRINGS);
-                System.out.println(flag);
+                flag = Myparse(x, jo, null , XMLParserConfiguration.ORIGINAL, keys);
+//                parse(x, jo, null , XMLParserConfiguration.ORIGINAL);
+//                System.out.println(flag);
             }
+        }
+//        Object res = jo.query(path);
+//        if(res instanceof JSONArray){
+//            System.out.println("THe END!!!!!");
+//            JSONObject temp = new JSONObject();
+//            temp.put("", res);
+//            return  temp;
+//        }
+//        else
+//            return (JSONObject) res;
+        return jo;
+    }
+
+    public static JSONObject toJSONObject(Reader reader, JSONPointer path, JSONObject replacement){
+        JSONObject jo = new JSONObject();
+        String[] keyPath = path.toString().split("/");
+        for(String s: keyPath)
+            System.out.println(s);
+        XMLTokener x = new XMLTokener(reader);
+        JSONArray arr;
+
+        while (x.more()) {
+            x.skipPast("<");
+            if(x.more()) {
+//                flag = Myparse(x, jo, null , XMLParserConfiguration.ORIGINAL, keys);
+                parse(x, jo, null , XMLParserConfiguration.ORIGINAL);
+//                System.out.println(flag);
+            }
+        }
+        System.out.println("check: " + keyPath[keyPath.length - 1]);
+        Object res = jo.query(path);
+        JSONObject temp = (JSONObject) res;
+        Object check = temp.remove(keyPath[keyPath.length - 1]);
+        if(check != null){
+            temp.put("UCI", "SWE262");
+        }else {
+            System.out.println("Key does not exist");
         }
         return jo;
     }

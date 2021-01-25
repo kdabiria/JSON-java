@@ -41,13 +41,7 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-import org.json.XML;
-import org.json.XMLParserConfiguration;
-import org.json.XMLXsiTypeConverter;
+import org.json.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -732,6 +726,7 @@ public class XMLTest {
                         "}"+
                     "}"+
                 "}";
+
         jsonObject = new JSONObject(jsonStr);
         xmlStr = XML.toString(jsonObject);
         /*
@@ -1068,4 +1063,35 @@ public class XMLTest {
             fail("Expected to be unable to modify the config");
         } catch (Exception ignored) { }
     }
+
+    @Test
+    public void testTaskOneMilstone2() {
+
+        File file = new File("/Users/kamyardabiri/Desktop/num1.xml");
+        try{
+            Reader readfile = new FileReader(file);
+            JSONPointer jsonPointer = new JSONPointer("/catalog/book");
+            JSONPointer jsonPointer1 = new JSONPointer("/catalog/book/2");
+            assertEquals("Checking for path",jsonPointer, jsonPointer);
+            assertEquals("Checking for path",jsonPointer1, jsonPointer1);
+            JSONObject jsonObject = XML.toJSONObject(readfile, jsonPointer);
+            /* the output:
+             {
+                "author": "Gambardella, Matthew",
+                "price": 44.95,
+                "genre": "Computer",
+                "description": "An in-depth look at creating applications \n      with XML.",
+                "id": "bk101",
+                "title": "XML Developer's Guide",
+                "publish_date": "2000-10-01"
+            }
+            * */
+            assertTrue("nothing to test here, see comment to see the expected jsonobject, above", true);
+
+        }
+        catch (Exception e){
+            System.out.println(e.toString());
+        }
+    }
+
 }
