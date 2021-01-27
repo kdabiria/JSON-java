@@ -29,6 +29,7 @@ import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 
@@ -861,6 +862,7 @@ public class XML {
 
     }
 
+    // my parse function for milstone 2
     private static boolean Myparse(XMLTokener x, JSONObject context, String name, XMLParserConfiguration config, String[] keys)
             throws JSONException {
         char c;
@@ -948,7 +950,7 @@ public class XML {
         } else {
 
             tagName = (String) token;
-            System.out.println("Kamyar: " + tagName);
+//            System.out.println("Kamyar: " + tagName);
 
             XMLTokener prev = null;
 //            token = null;
@@ -958,10 +960,10 @@ public class XML {
             int counter = 0;
 
             for (;;) {
-                System.out.println("lalalalalal: "+ token);
+//                System.out.println("lalalalalal: "+ token);
                 if(index <= keys.length - 1  && tagName.equals(keys[index])){
                     if( index == keys.length - 1){
-                        System.out.println("ee: " );
+//                        System.out.println("ee: " );
                         x.skipPast("<");
                         parse(x, context, null, config);
 //                        System.out.println("DONEEEEE");
@@ -969,7 +971,7 @@ public class XML {
 
                     }
                     else {
-                        System.out.println("here!!!!!");
+//                        System.out.println("here!!!!!");
                         x.skipPast("<");
                         token = x.nextToken();
                         tagName = (String) token;
@@ -990,12 +992,12 @@ public class XML {
                     else
                         token = x.nextToken();
 
-                    System.out.println("mewo " + tagName);
+//                    System.out.println("mewo " + tagName);
                 }
                 else if (token == GT){
                     token = x.nextContent();
 //                    tagName = (String) token;
-                    System.out.println("GT");
+//                    System.out.println("GT");
 //                    return false;
                 }
                 else if (token == LT) {
@@ -1010,27 +1012,21 @@ public class XML {
                         token = x.nextToken();
 //                    tagName = (String) token;
 
-                    System.out.println("LT");
+//                    System.out.println("LT");
                 }
                 else if (token == SLASH) {
                     token = x.nextToken();
 //                    tagName = (String) token;
 
-                    System.out.println("SLASH");
+//                    System.out.println("SLASH");
                 }
                 else if (token == EQ){
                     token = x.nextToken();
-                    System.out.println("EQ");
+//                    System.out.println("EQ");
                 }
                 else if(token == null){
                     return false;
                 }
-//                else if (index >= keys.length ){
-//                    return false;
-//                }
-//                System.out.println("haha:" + token.getClass());
-
-
             }
         }
     }
@@ -1039,6 +1035,7 @@ public class XML {
     * adding overloaded static method here
     * */
 
+    // task 1
     public static JSONObject toJSONObject(Reader reader, JSONPointer path) {
         JSONObject jo = new JSONObject();
 
@@ -1046,9 +1043,9 @@ public class XML {
         // path: /cataloge/book/0
         String[] keys = path.toString().split("/");
         // ["", cataogle, book, 0]
-        for(int i =0; i < keys.length;i++)
-            System.out.println(keys[i]);
-        System.out.println("END!!");
+//        for(int i =0; i < keys.length;i++)
+//            System.out.println(keys[i]);
+//        System.out.println("END!!");
 //        System.out.println(p);
         boolean flag = false;
         while (x.more()) {
@@ -1060,43 +1057,51 @@ public class XML {
 //                System.out.println(flag);
             }
         }
-//        Object res = jo.query(path);
-//        if(res instanceof JSONArray){
-//            System.out.println("THe END!!!!!");
-//            JSONObject temp = new JSONObject();
-//            temp.put("", res);
-//            return  temp;
-//        }
-//        else
-//            return (JSONObject) res;
         return jo;
     }
 
+    // task 2
     public static JSONObject toJSONObject(Reader reader, JSONPointer path, JSONObject replacement){
         JSONObject jo = new JSONObject();
         String[] keyPath = path.toString().split("/");
-        for(String s: keyPath)
-            System.out.println(s);
+
+
         XMLTokener x = new XMLTokener(reader);
-        JSONArray arr;
 
         while (x.more()) {
             x.skipPast("<");
             if(x.more()) {
-//                flag = Myparse(x, jo, null , XMLParserConfiguration.ORIGINAL, keys);
                 parse(x, jo, null , XMLParserConfiguration.ORIGINAL);
-//                System.out.println(flag);
             }
         }
-        System.out.println("check: " + keyPath[keyPath.length - 1]);
-        Object res = jo.query(path);
-        JSONObject temp = (JSONObject) res;
-        Object check = temp.remove(keyPath[keyPath.length - 1]);
-        if(check != null){
-            temp.put("UCI", "SWE262");
-        }else {
-            System.out.println("Key does not exist");
+        try {
+            JSONObject temp = (JSONObject) path.queryFrom(jo);
+            Iterator<String>  keys = temp.keys();
+            ArrayList<String> deleteKeys = new ArrayList<>();
+            while(keys.hasNext()){
+                String key = keys.next();
+//                System.out.println("The key: " + key);
+                deleteKeys.add(key);
+            }
+//            System.out.println(deleteKeys);
+            for(String s: deleteKeys){
+                temp.remove(s);
+            }
+
+            Iterator<String> newJsonObjectKey = replacement.keys();
+            ArrayList<String> myKey = new ArrayList<>();
+            while(newJsonObjectKey.hasNext()){
+                String key = newJsonObjectKey.next();
+//                System.out.println("The key: " + key);
+                myKey.add(key);
+            }
+            for(String s: myKey)
+                temp.put(s, replacement.get(s));
         }
+        catch (Exception e){
+            System.out.println(e.toString());
+        }
+
         return jo;
     }
 

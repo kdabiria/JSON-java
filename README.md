@@ -1,3 +1,17 @@
+SWE 262P Milstone 2
+===============================
+The changes are in XML.java file and XMLTest.java.
+To run the proram to see the functionallity of the two function you can run the unit test XMLTest file.
+Another way to test the functions is:  (We hve Test.java file):
+    . In command line (mac or linux) go to the the src/main/java 
+    . javac org/json/*.java
+    . jar cf json-java.jar org/json/*.class
+    . javac -cp .:json-java.jar Test.java 
+    . java -cp .:json-java.jar Test
+
+The out will be in .json file in same directory!
+
+
 JSON in Java [package org.json]
 ===============================
 

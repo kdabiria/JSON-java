@@ -1067,13 +1067,14 @@ public class XMLTest {
     @Test
     public void testTaskOneMilstone2() {
 
-        File file = new File("/Users/kamyardabiri/Desktop/num1.xml");
+        File file = new File("/num1.xml");
         try{
             Reader readfile = new FileReader(file);
             JSONPointer jsonPointer = new JSONPointer("/catalog/book");
             JSONPointer jsonPointer1 = new JSONPointer("/catalog/book/2");
             assertEquals("Checking for path",jsonPointer, jsonPointer);
             assertEquals("Checking for path",jsonPointer1, jsonPointer1);
+            assertTrue("JSONPointer start with /", jsonPointer.toString().startsWith("/"));
             JSONObject jsonObject = XML.toJSONObject(readfile, jsonPointer);
             /* the output:
              {
@@ -1093,5 +1094,26 @@ public class XMLTest {
             System.out.println(e.toString());
         }
     }
+
+    @Test
+    public void testTaskTwoMilstone2 (){
+        File file = new File("/num1.xml");
+        try{
+            Reader readfile = new FileReader(file);
+            JSONPointer jsonPointer = new JSONPointer("/catalog/book/0");
+            JSONObject myjson = new JSONObject();
+            myjson.put("SWE262P", "UCI");
+            JSONObject myjson2 = new JSONObject();
+            myjson2.put("SWE262P", "UCI");
+            JSONObject jsonObject = XML.toJSONObject(readfile, jsonPointer, myjson);
+            assertTrue("Checking to see the value change", myjson == jsonObject.query(jsonPointer));
+            assertFalse("value should not be equal", myjson2 == jsonObject.query(jsonPointer));
+        }
+        catch (Exception e){
+            System.out.println(e.toString());
+        }
+
+    }
+
 
 }

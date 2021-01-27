@@ -1,4 +1,9 @@
-
-catalog
-check: catalog
-Key does not exist
+The key: author
+The key: price
+The key: genre
+The key: description
+The key: id
+The key: title
+The key: publish_date
+[author, price, genre, description, id, title, publish_date]
+The key: SWE262P
