@@ -1,3 +1,10 @@
+SWE 262P Milstone 3
+===============================
+The changes are in XML.java file and XMLTest.java.
+To run the code follow milstone 2.
+
+The difference between doing th prefix inside the library is more efficient and faster compare to client code in milstone 1. Doing it in place will give better space and time complexity.
+
 SWE 262P Milstone 2
 ===============================
 The changes are in XML.java file and XMLTest.java.
