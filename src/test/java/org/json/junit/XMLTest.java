@@ -40,6 +40,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.json.*;
 import org.junit.Rule;
@@ -1113,6 +1114,52 @@ public class XMLTest {
             System.out.println(e.toString());
         }
 
+    }
+
+    //milstone 3 test case
+    @Test
+    public void testMilstone3 () {
+        File file = new File("/Users/kamyardabiri/Desktop/num2.xml");
+        String result = "{\"SWE262P_class\":{\"SWE262P_student\":[{\"SWE262P_id\":1,\"SWE262P_name\":\"santosh\",\"SWE262P_branch\":\"BA\",\"SWE262P_cgpa\":7},{\"SWE262P_id\":5,\"SWE262P_name\":\"Darshan\",\"SWE262P_branch\":\"IT\",\"SWE262P_cgpa\":9},{\"SWE262P_id\":6,\"SWE262P_name\":\"Rahul\",\"SWE262P_branch\":\"science\",\"SWE262P_cgpa\":10}]}}";
+        try{
+            Reader readfile = new FileReader(file);
+            Function<String, String> temp = a -> ("SWE262P_" + a);
+            JSONObject res = XML.toJSONObject(readfile, temp);
+            assertEquals("Checking to output w/ prefix", result, res.toString());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testMilstone3JsonArray() {
+        File file = new File("/Users/kamyardabiri/Desktop/num1.xml");
+        String result ="{\"SWE262P_catalog\":{\"SWE262P_book\":[{\"SWE262P_id\":\"bk101\",\"SWE262P_price\":44.95,\"SWE262P_author\":\"Gambardella, Matthew\",\"SWE262P_description\":\"An in-depth look at creating applications \\n      with XML.\",\"SWE262P_publish_date\":\"2000-10-01\",\"SWE262P_genre\":\"Computer\",\"SWE262P_title\":\"XML Developer's Guide\"},{\"SWE262P_id\":\"bk102\",\"SWE262P_price\":5.95,\"SWE262P_author\":\"Ralls, Kim\",\"SWE262P_description\":\"A former architect battles corporate zombies, \\n      an evil sorceress, and her own childhood to become queen \\n      of the world.\",\"SWE262P_publish_date\":\"2000-12-16\",\"SWE262P_genre\":\"Fantasy\",\"SWE262P_title\":\"Midnight Rain\"},{\"SWE262P_id\":\"bk103\",\"SWE262P_price\":5.95,\"SWE262P_author\":\"Corets, Eva\",\"SWE262P_description\":\"After the collapse of a nanotechnology \\n      society in England, the young survivors lay the \\n      foundation for a new society.\",\"SWE262P_publish_date\":\"2000-11-17\",\"SWE262P_genre\":\"Fantasy\",\"SWE262P_title\":\"Maeve Ascendant\"},{\"SWE262P_id\":\"bk104\",\"SWE262P_price\":5.95,\"SWE262P_author\":\"Corets, Eva\",\"SWE262P_description\":\"In post-apocalypse England, the mysterious \\n      agent known only as Oberon helps to create a new life \\n      for the inhabitants of London. Sequel to Maeve \\n      Ascendant.\",\"SWE262P_publish_date\":\"2001-03-10\",\"SWE262P_genre\":\"Fantasy\",\"SWE262P_title\":\"Oberon's Legacy\"},{\"SWE262P_id\":\"bk105\",\"SWE262P_price\":5.95,\"SWE262P_author\":\"Corets, Eva\",\"SWE262P_description\":\"The two daughters of Maeve, half-sisters, \\n      battle one another for control of England. Sequel to \\n      Oberon's Legacy.\",\"SWE262P_publish_date\":\"2001-09-10\",\"SWE262P_genre\":\"Fantasy\",\"SWE262P_title\":\"The Sundered Grail\"},{\"SWE262P_id\":\"bk106\",\"SWE262P_price\":4.95,\"SWE262P_author\":\"Randall, Cynthia\",\"SWE262P_description\":\"When Carla meets Paul at an ornithology \\n      conference, tempers fly as feathers get ruffled.\",\"SWE262P_publish_date\":\"2000-09-02\",\"SWE262P_genre\":\"Romance\",\"SWE262P_title\":\"Lover Birds\"},{\"SWE262P_id\":\"bk107\",\"SWE262P_price\":4.95,\"SWE262P_author\":\"Thurman, Paula\",\"SWE262P_description\":\"A deep sea diver finds true love twenty \\n      thousand leagues beneath the sea.\",\"SWE262P_publish_date\":\"2000-11-02\",\"SWE262P_genre\":\"Romance\",\"SWE262P_title\":\"Splish Splash\"},{\"SWE262P_id\":\"bk108\",\"SWE262P_price\":4.95,\"SWE262P_author\":\"Knorr, Stefan\",\"SWE262P_description\":\"An anthology of horror stories about roaches,\\n      centipedes, scorpions  and other insects.\",\"SWE262P_publish_date\":\"2000-12-06\",\"SWE262P_genre\":\"Horror\",\"SWE262P_title\":\"Creepy Crawlies\"},{\"SWE262P_id\":\"bk109\",\"SWE262P_price\":6.95,\"SWE262P_author\":\"Kress, Peter\",\"SWE262P_description\":\"After an inadvertant trip through a Heisenberg\\n      Uncertainty Device, James Salway discovers the problems \\n      of being quantum.\",\"SWE262P_publish_date\":\"2000-11-02\",\"SWE262P_genre\":\"Science Fiction\",\"SWE262P_title\":\"Paradox Lost\"},{\"SWE262P_id\":\"bk110\",\"SWE262P_price\":36.95,\"SWE262P_author\":\"O'Brien, Tim\",\"SWE262P_description\":\"Microsoft's .NET initiative is explored in \\n      detail in this deep programmer's reference.\",\"SWE262P_publish_date\":\"2000-12-09\",\"SWE262P_genre\":\"Computer\",\"SWE262P_title\":\"Microsoft .NET: The Programming Bible\"},{\"SWE262P_id\":\"bk111\",\"SWE262P_price\":36.95,\"SWE262P_author\":\"O'Brien, Tim\",\"SWE262P_description\":\"The Microsoft MSXML3 parser is covered in \\n      detail, with attention to XML DOM interfaces, XSLT processing, \\n      SAX and more.\",\"SWE262P_publish_date\":\"2000-12-01\",\"SWE262P_genre\":\"Computer\",\"SWE262P_title\":\"MSXML3: A Comprehensive Guide\"},{\"SWE262P_id\":\"bk112\",\"SWE262P_price\":49.95,\"SWE262P_author\":\"Galos, Mike\",\"SWE262P_description\":\"Microsoft Visual Studio 7 is explored in depth,\\n      looking at how Visual Basic, Visual C++, C#, and ASP+ are \\n      integrated into a comprehensive development \\n      environment.\",\"SWE262P_publish_date\":\"2001-04-16\",\"SWE262P_genre\":\"Computer\",\"SWE262P_title\":\"Visual Studio 7: A Comprehensive Guide\"}]}}";
+        try{
+            Reader readfile = new FileReader(file);
+            Function<String, String> temp = a -> ("SWE262P_" + a);
+            JSONObject res = XML.toJSONObject(readfile, temp);
+            assertEquals("Checking to output w/ prefix for JSONArray", result, res.toString());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testMilstone3PrefixwithInteger() {
+        File file = new File("/Users/kamyardabiri/Desktop/num1.xml");
+        String result = "{\"1catalog\":{\"1book\":[{\"1author\":\"Gambardella, Matthew\",\"1price\":44.95,\"1title\":\"XML Developer's Guide\",\"1publish_date\":\"2000-10-01\",\"1genre\":\"Computer\",\"1id\":\"bk101\",\"1description\":\"An in-depth look at creating applications \\n      with XML.\"},{\"1author\":\"Ralls, Kim\",\"1price\":5.95,\"1title\":\"Midnight Rain\",\"1publish_date\":\"2000-12-16\",\"1genre\":\"Fantasy\",\"1id\":\"bk102\",\"1description\":\"A former architect battles corporate zombies, \\n      an evil sorceress, and her own childhood to become queen \\n      of the world.\"},{\"1author\":\"Corets, Eva\",\"1price\":5.95,\"1title\":\"Maeve Ascendant\",\"1publish_date\":\"2000-11-17\",\"1genre\":\"Fantasy\",\"1id\":\"bk103\",\"1description\":\"After the collapse of a nanotechnology \\n      society in England, the young survivors lay the \\n      foundation for a new society.\"},{\"1author\":\"Corets, Eva\",\"1price\":5.95,\"1title\":\"Oberon's Legacy\",\"1publish_date\":\"2001-03-10\",\"1genre\":\"Fantasy\",\"1id\":\"bk104\",\"1description\":\"In post-apocalypse England, the mysterious \\n      agent known only as Oberon helps to create a new life \\n      for the inhabitants of London. Sequel to Maeve \\n      Ascendant.\"},{\"1author\":\"Corets, Eva\",\"1price\":5.95,\"1title\":\"The Sundered Grail\",\"1publish_date\":\"2001-09-10\",\"1genre\":\"Fantasy\",\"1id\":\"bk105\",\"1description\":\"The two daughters of Maeve, half-sisters, \\n      battle one another for control of England. Sequel to \\n      Oberon's Legacy.\"},{\"1author\":\"Randall, Cynthia\",\"1price\":4.95,\"1title\":\"Lover Birds\",\"1publish_date\":\"2000-09-02\",\"1genre\":\"Romance\",\"1id\":\"bk106\",\"1description\":\"When Carla meets Paul at an ornithology \\n      conference, tempers fly as feathers get ruffled.\"},{\"1author\":\"Thurman, Paula\",\"1price\":4.95,\"1title\":\"Splish Splash\",\"1publish_date\":\"2000-11-02\",\"1genre\":\"Romance\",\"1id\":\"bk107\",\"1description\":\"A deep sea diver finds true love twenty \\n      thousand leagues beneath the sea.\"},{\"1author\":\"Knorr, Stefan\",\"1price\":4.95,\"1title\":\"Creepy Crawlies\",\"1publish_date\":\"2000-12-06\",\"1genre\":\"Horror\",\"1id\":\"bk108\",\"1description\":\"An anthology of horror stories about roaches,\\n      centipedes, scorpions  and other insects.\"},{\"1author\":\"Kress, Peter\",\"1price\":6.95,\"1title\":\"Paradox Lost\",\"1publish_date\":\"2000-11-02\",\"1genre\":\"Science Fiction\",\"1id\":\"bk109\",\"1description\":\"After an inadvertant trip through a Heisenberg\\n      Uncertainty Device, James Salway discovers the problems \\n      of being quantum.\"},{\"1author\":\"O'Brien, Tim\",\"1price\":36.95,\"1title\":\"Microsoft .NET: The Programming Bible\",\"1publish_date\":\"2000-12-09\",\"1genre\":\"Computer\",\"1id\":\"bk110\",\"1description\":\"Microsoft's .NET initiative is explored in \\n      detail in this deep programmer's reference.\"},{\"1author\":\"O'Brien, Tim\",\"1price\":36.95,\"1title\":\"MSXML3: A Comprehensive Guide\",\"1publish_date\":\"2000-12-01\",\"1genre\":\"Computer\",\"1id\":\"bk111\",\"1description\":\"The Microsoft MSXML3 parser is covered in \\n      detail, with attention to XML DOM interfaces, XSLT processing, \\n      SAX and more.\"},{\"1author\":\"Galos, Mike\",\"1price\":49.95,\"1title\":\"Visual Studio 7: A Comprehensive Guide\",\"1publish_date\":\"2001-04-16\",\"1genre\":\"Computer\",\"1id\":\"bk112\",\"1description\":\"Microsoft Visual Studio 7 is explored in depth,\\n      looking at how Visual Basic, Visual C++, C#, and ASP+ are \\n      integrated into a comprehensive development \\n      environment.\"}]}}";
+        try{
+            Reader readfile = new FileReader(file);
+            Function<String, String> temp = a -> (1 + a);
+            JSONObject res = XML.toJSONObject(readfile, temp);
+            assertEquals("Checking to output w/ prefix for JSONArray", result, res.toString());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 
