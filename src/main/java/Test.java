@@ -26,12 +26,12 @@ public class Test {
 //            newJsonFile.close();
 
             //milstone 3
-            Function<String, String> temp = a -> ("SWE262P_" + a);
-            JSONObject res2 = XML.toJSONObject(readfile, temp);
-
-            FileWriter newJsonFile2 = new FileWriter("res2.json");
-            newJsonFile2.write(res2.toString(4));
-            newJsonFile2.close();
+//            Function<String, String> temp = a -> ("SWE262P_" + a);
+//            JSONObject res2 = XML.toJSONObject(readfile, temp);
+//
+//            FileWriter newJsonFile2 = new FileWriter("res2.json");
+//            newJsonFile2.write(res2.toString(4));
+//            newJsonFile2.close();
         }
         catch (Exception e){
             System.out.println("Key path does not exist " + e.toString());

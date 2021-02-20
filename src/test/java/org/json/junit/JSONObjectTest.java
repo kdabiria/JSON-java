@@ -34,10 +34,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -49,7 +46,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.json.CDL;
 import org.json.JSONArray;
@@ -3229,5 +3229,71 @@ public class JSONObjectTest {
         jsonObject.clear(); //Clears the JSONObject
         assertTrue("expected jsonObject.length() == 0", jsonObject.length() == 0); //Check if its length is 0
         jsonObject.getInt("key1"); //Should throws org.json.JSONException: JSONObject["asd"] not found
+    }
+
+    /**
+     * checking the output (getting values)
+     */
+    @Test
+    public void milstone4XMLtoString1() {
+
+        JSONObject obj = XML.toJSONObject("\"<Books><book><title>AAA</title><author>ASmith</author></book><book><title>BBB</title><author>BSmith</author></book></Books>\"");
+
+        var resExpected = obj.getJSONObject("Books");
+        var myList = new ArrayList<>();
+        myList.add(resExpected);
+
+        List<Object> res = obj.toStream().map(Map.Entry::getValue).collect(Collectors.toList());
+        assertTrue("the length != 0", res.size() != 0);
+        assertEquals(myList,res);
+    }
+
+    /**
+     * checking the type
+     */
+    @Test
+    public void milstone4XMLtoString2() {
+        JSONObject obj = XML.toJSONObject("\"<Books><book><title>AAA</title><author>ASmith</author></book><book><title>BBB</title><author>BSmith</author></book></Books>\"");
+
+        assertTrue("Type is Stream", obj.toStream() instanceof Stream);
+    }
+
+    /**
+     * adding prefix to all the keys.
+     * adding prefix to certian key, using filter.
+     */
+    @Test
+    public void milstone4XMLtoString3() {
+        JSONObject obj = XML.toJSONObject("<author>Gambardella, Matthew</author>\n" +
+                "      <title>XML Developer's Guide</title>\n" +
+                "      <genre>Computer</genre>\n" +
+                "      <price>44.95</price>\n" +
+                "      <publish_date>2000-10-01</publish_date>");
+        var keys = obj.keySet();
+        var expectedResult = new ArrayList<>();
+        for(String key: keys ){
+            expectedResult.add("SWE262P_" + key);
+        }
+
+        var res = obj.toStream()
+                .map(Map.Entry::getKey)
+                .map(n -> "SWE262P_" + (String)n)
+                .collect(Collectors.toList());
+
+        //using filter
+        var expectedFilterRes = new ArrayList<>();
+        for(String key : keys){
+            if(key.equals("price"))
+                expectedFilterRes.add("SWE262P_" + key);
+        }
+
+        var res2 = obj.toStream()
+                .map(Map.Entry::getKey)
+                .filter(n -> ((String)n).equals("price"))
+                .map(n -> "SWE262P_" + (String)n)
+                .collect(Collectors.toList());
+
+        assertEquals("Output with prefix", expectedResult, res);
+        assertEquals("Output with prefix using filters" , expectedFilterRes, res2);
     }
 }
