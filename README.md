@@ -1,5 +1,10 @@
 SWE 262P Milstone 3
 ===============================
+The changes are in JSONObject.java file JSONObjectTest.java.
+
+
+SWE 262P Milstone 3
+===============================
 The changes are in XML.java file and XMLTest.java.
 To run the code follow milstone 2.
 
