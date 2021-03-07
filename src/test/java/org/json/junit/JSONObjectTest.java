@@ -37,14 +37,7 @@ import static org.mockito.Mockito.when;
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
@@ -3239,8 +3232,8 @@ public class JSONObjectTest {
 
         JSONObject obj = XML.toJSONObject("\"<Books><book><title>AAA</title><author>ASmith</author></book><book><title>BBB</title><author>BSmith</author></book></Books>\"");
 
-        var resExpected = obj.getJSONObject("Books");
-        var myList = new ArrayList<>();
+        JSONObject resExpected = obj.getJSONObject("Books");
+        List myList = new ArrayList<>();
         myList.add(resExpected);
 
         List<Object> res = obj.toStream().map(Map.Entry::getValue).collect(Collectors.toList());
@@ -3269,25 +3262,25 @@ public class JSONObjectTest {
                 "      <genre>Computer</genre>\n" +
                 "      <price>44.95</price>\n" +
                 "      <publish_date>2000-10-01</publish_date>");
-        var keys = obj.keySet();
-        var expectedResult = new ArrayList<>();
+        Set<String> keys = obj.keySet();
+        List expectedResult = new ArrayList<>();
         for(String key: keys ){
             expectedResult.add("SWE262P_" + key);
         }
 
-        var res = obj.toStream()
+        List<String> res = obj.toStream()
                 .map(Map.Entry::getKey)
                 .map(n -> "SWE262P_" + (String)n)
                 .collect(Collectors.toList());
 
         //using filter
-        var expectedFilterRes = new ArrayList<>();
+        List expectedFilterRes = new ArrayList<>();
         for(String key : keys){
             if(key.equals("price"))
                 expectedFilterRes.add("SWE262P_" + key);
         }
 
-        var res2 = obj.toStream()
+        List<String> res2 = obj.toStream()
                 .map(Map.Entry::getKey)
                 .filter(n -> ((String)n).equals("price"))
                 .map(n -> "SWE262P_" + (String)n)
