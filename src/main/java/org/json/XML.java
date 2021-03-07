@@ -31,6 +31,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.function.Function;
 
 
@@ -1301,5 +1304,24 @@ public class XML {
         return jo;
     }
 
+    /*
+     * Milestone 5
+     * */
+    public static Future<JSONObject> futureJSONObject(Reader reader) {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
 
+        return executorService.submit(() -> {
+            JSONObject jo = new JSONObject();
+            XMLTokener x = new XMLTokener(reader);
+            while (x.more()) {
+                x.skipPast("<");
+                if(x.more()) {
+                    parse(x,jo, null, XMLParserConfiguration.ORIGINAL);
+                }
+
+            }
+
+            return jo;
+        });
+    }
 }
