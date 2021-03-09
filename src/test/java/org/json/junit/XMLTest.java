@@ -30,16 +30,11 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.function.Function;
 
 import org.json.*;
@@ -1162,4 +1157,55 @@ public class XMLTest {
         }
     }
 
+    //milstone 5 test case
+    @Test
+    public void testMilestone5() throws FileNotFoundException, InterruptedException, ExecutionException {
+        File file = new File("/Users/kamyardabiri/Desktop/num1.xml");
+        Reader readfile = new FileReader(file);
+        Future<JSONObject> futureObj = XML.futureJSONObject(readfile);
+
+        while (futureObj.isDone())
+            Thread.sleep(100);
+
+        JSONObject actual = futureObj.get();
+
+        Reader reader = new FileReader(file);
+        JSONObject expected = XML.toJSONObject(reader);
+
+        assertEquals("checking the future result", expected.toString(), actual.toString());
+
+    }
+
+    /**
+     * testing with large file
+     * */
+    @Test
+    public void testMilestone5WithLargeFile() throws FileNotFoundException, ExecutionException, InterruptedException {
+        File file = new File("/Users/kamyardabiri/Desktop/num5Large.xml");
+        Reader readfile = new FileReader(file);
+        Future<JSONObject> futureObj = XML.futureJSONObject(readfile);
+
+        while (futureObj.isDone())
+            Thread.sleep(100);
+
+        JSONObject actual = futureObj.get();
+
+        Reader reader = new FileReader(file);
+        JSONObject expected = XML.toJSONObject(reader);
+
+        assertEquals("checking the future result", expected.toString(), actual.toString());
+    }
+
+    /**
+     * canceling the future task
+     * */
+    @Test
+    public void testMilestone5CancelFutureCall() throws FileNotFoundException {
+        File file = new File("/Users/kamyardabiri/Desktop/num1.xml");
+        Reader readfile = new FileReader(file);
+        Future<JSONObject> futureObj = XML.futureJSONObject(readfile);
+
+        futureObj.cancel(true);
+        assertTrue("The thread should be cancel", futureObj.isCancelled());
+    }
 }
