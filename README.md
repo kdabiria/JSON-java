@@ -1,7 +1,13 @@
-SWE 262P Milstone 3
+SWE 262P Milstone 5
+===============================
+The changes are in XML.java file and XMLTest.java.
+To run the code follow milstone 2 setp 1.
+
+SWE 262P Milstone 4
 ===============================
 The changes are in JSONObject.java file JSONObjectTest.java.
-
+To run the proram to see the functionallity of the two function:
+    you can run the unit test JSONObjectTest.java file.
 
 SWE 262P Milstone 3
 ===============================
@@ -13,15 +19,18 @@ The difference between doing th prefix inside the library is more efficient and 
 SWE 262P Milstone 2
 ===============================
 The changes are in XML.java file and XMLTest.java.
-To run the proram to see the functionallity of the two function you can run the unit test XMLTest file.
-Another way to test the functions is:  (We hve Test.java file):
-    . In command line (mac or linux) go to the the src/main/java 
-    . javac org/json/*.java
-    . jar cf json-java.jar org/json/*.class
-    . javac -cp .:json-java.jar Test.java 
-    . java -cp .:json-java.jar Test
+To run the proram to see the functionallity of the two function:
+Step 1: 
+    you can run the unit test XMLTest file.
+Step 2:
+    Another way to test the functions is:  (We hve Test.java file):
+        . In command line (mac or linux) go to the the src/main/java 
+        . javac org/json/*.java
+        . jar cf json-java.jar org/json/*.class
+        . javac -cp .:json-java.jar Test.java 
+        . java -cp .:json-java.jar Test
 
-The out will be in .json file in same directory!
+    The out will be in .json file in same directory!
 
 
 JSON in Java [package org.json]
